@@ -3,27 +3,52 @@ package com.example.fiftyclash.models;
 import java.util.ArrayList;
 
 public class Player {
-    private Card selectedCard;
-    private ArrayList<Card> handCards;
-    private boolean isPlaying;
+    private Card[] handCards;
+    private boolean canPlay;
+    private boolean isPlayerTurn;
 
-    Player(ArrayList<Card> handCards) {
-        this.handCards = handCards;
+    public Player() {
+        handCards = new Card[4];
     }
 
-    public void setHandCards(ArrayList<Card> handCards) {
-        this.handCards = handCards;
+    public void drawCard(Deck deck) {
+        for (int i = 0; i < 4; i++) {
+            if (handCards[i] == null){
+                handCards[i] = deck.getDeck().get(0);
+                deck.removeCard(0);
+            }
+        }
     }
 
-    public ArrayList<Card> getHandCards() {
+    public void playCard(Deck deck, int index) {
+        if (deck.getCurrentPoints() + handCards[index].getCardValue() < 50){
+            deck.addCard(handCards[index]);
+            handCards[index] = null;
+        }
+    }
+
+    public void printHandCards() {
+        String icon = "";
+        for (int i = 0; i < handCards.length; i++) {
+            switch (handCards[i].getSuit()){
+                case "diamonds": icon = "♦"; break;
+                case "hearts": icon = "♥"; break;
+                case "clubs": icon = "♣"; break;
+                case "spades": icon = "♠"; break;
+            }
+            System.out.println(handCards[i].getValue() + icon);
+        }
+    }
+
+    public Card[] getHandCards() {
         return handCards;
     }
 
-    public void setSelectedCard(Card selectedCard) {
-        this.selectedCard = selectedCard;
+    public void setCanPlay(boolean canPlay) {
+        this.canPlay = canPlay;
     }
 
-    public Card getSelectedCard() {
-        return selectedCard;
+    public boolean getCanPlay() {
+        return canPlay;
     }
 }
