@@ -1,5 +1,6 @@
 package com.example.fiftyclash;
 
+import com.example.fiftyclash.models.*;
 import com.example.fiftyclash.views.GameView;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -69,4 +70,21 @@ public class Main extends Application {
     players[0].drawCard(drawDeck);
     players[0].printHandCards();
      */
+
+    /*
+        Machine[] machines = new Machine[1];
+        Player player = new Player();
+        Deck playDeck = new Deck();
+        Deck drawDeck = new Deck();
+        machines[0] = new Machine();
+        Table mainTable = new Table(drawDeck, player, machines);
+
+        mainTable.initializeTable(player, machines);
+        System.out.println("DRAW DECK");
+        mainTable.getDrawDeck().printDeck();
+        System.out.println("MACHINE HAND CARDS");
+        mainTable.getMachine()[0].printHandCards();
+
+        mainTable.getMachine()[0].selectPlayCard(playDeck);
+        */
 }

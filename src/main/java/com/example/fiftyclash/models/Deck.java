@@ -27,9 +27,6 @@ public class Deck {
         if (deck != null) {
             for (Card card : deck) {
                 switch (card.getValue()) {
-                    case "J", "Q", "K":
-                        pointsAccumulator -= card.getCardValue();
-                        break;
                     case "A":
                         if (pointsAccumulator + card.getCardValue() > 50) pointsAccumulator += 1;
                         else pointsAccumulator += card.getCardValue();
@@ -69,9 +66,5 @@ public class Deck {
 
     public ArrayList<Card> getDeck() {
         return deck;
-    }
-
-    public void setDeck(ArrayList<Card> deck) {
-        this.deck = deck;
     }
 }

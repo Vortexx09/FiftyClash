@@ -11,20 +11,19 @@ public class Player {
         handCards = new Card[4];
     }
 
-    public void drawCard(Deck deck) {
+    public void drawCard(Deck drawDeck) {
         for (int i = 0; i < 4; i++) {
             if (handCards[i] == null){
-                handCards[i] = deck.getDeck().get(0);
-                deck.removeCard(0);
+                handCards[i] = drawDeck.getDeck().get(0);
+                drawDeck.removeCard(0);
             }
         }
     }
 
-    public void playCard(Deck deck, int index) {
-        if (deck.getCurrentPoints() + handCards[index].getCardValue() < 50){
-            deck.addCard(handCards[index]);
-            handCards[index] = null;
-        }
+    public void playCard (int index, Deck playDeck, Deck drawDeck) {
+        playDeck.addCard(handCards[index]);
+        handCards[index] = null;
+        drawCard(drawDeck);
     }
 
     public void printHandCards() {
@@ -48,7 +47,4 @@ public class Player {
         this.canPlay = canPlay;
     }
 
-    public boolean getCanPlay() {
-        return canPlay;
-    }
 }

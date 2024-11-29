@@ -1,34 +1,43 @@
 package com.example.fiftyclash.models;
 
-import java.util.ArrayList;
 import java.util.Collections;
 
 public class Table {
-    private Player[] players;
+    private Player player;
+    private Machine[] machines;
     private Card currentCard;
     private Deck drawDeck;
     private Deck playDeck;
 
-    public Table(Deck drawDeck, Player[] players) {
+    public Table(Deck drawDeck, Player player, Machine[] machinesList) {
         this.drawDeck = drawDeck;
+        this.player = player;
+        this.machines = machinesList;
         this.playDeck = new Deck();
     }
 
-    public void initializeTable(Player[] players) {
-        for (Player player : players) {
-            for (int j = 0; j < 4; j++) {
-                player.drawCard(drawDeck);
+    public void initializeTable(Player player, Machine[] machinesList) {
+        drawDeck.initializeDeck();
+        drawDeck.printDeck();
+
+        for (int i = 0; i < player.getHandCards().length; i++){
+            player.drawCard(drawDeck);
+        }
+
+        for (int i = 0; i < machinesList.length; i++) {
+            for (int j = 0; j < machinesList[i].getHandCards().length; j++) {
+                machinesList[i].drawCard(drawDeck);
             }
         }
 
         if (currentCard == null) {
             currentCard = drawDeck.getDeck().get(0);
-            playDeck.getDeck().add(currentCard);
             drawDeck.getDeck().remove(0);
+            playDeck.getDeck().add(currentCard);
         }
     }
 
-    public void updateCurrentCard() {
+    public void setCurrentCard() {
         int index = playDeck.getDeck().size() - 1;
         currentCard = playDeck.getDeck().get(index);
     }
@@ -59,5 +68,9 @@ public class Table {
 
     public Card getCurrentCard() {
         return currentCard;
+    }
+
+    public Machine[] getMachine(){
+        return machines;
     }
 }
