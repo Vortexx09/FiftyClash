@@ -9,8 +9,8 @@ public class Table {
     private Deck drawDeck;
     private Deck playDeck;
 
-    public Table(Deck drawDeck, Player player, Machine[] machinesList) {
-        this.drawDeck = drawDeck;
+    public Table(Player player, Machine[] machinesList) {
+        this.drawDeck = new Deck();
         this.player = player;
         this.machines = machinesList;
         this.playDeck = new Deck();

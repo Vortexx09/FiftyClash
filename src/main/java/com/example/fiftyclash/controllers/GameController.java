@@ -3,6 +3,7 @@ package com.example.fiftyclash.controllers;
 import com.example.fiftyclash.models.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -17,23 +18,17 @@ public class GameController {
     private AnchorPane root, machineHand0, machineHand1, machineHand2;
 
     @FXML
+    private Label pointsLabel, turnsLabel;
+
+    @FXML
     private Button playButton, startButton;
 
     int cardIndex;
-    Deck drawDeck = new Deck();
+    int machinesAmount;
+    String playerName;
+    Machine[] machines;
     Player player = new Player();
-    Machine[] machines = new Machine[1];
-    Table table = new Table(drawDeck, player, machines);
-
-    @FXML
-    public void startGame(ActionEvent event) {
-        machines[0] = new Machine();
-        table.initializeTable(player, machines);
-        for (int i = 0; i < player.getHandCards().length; i++){
-            updateCard(i, player.getHandCards()[i].getValue(), player.getHandCards()[i].getIcon());
-        }
-        updateCard(4, table.getCurrentCard().getValue(), table.getCurrentCard().getIcon());
-    }
+    Table table = new Table(player, machines);
 
     @FXML
     public void getCardValues(MouseEvent event) {
@@ -46,48 +41,52 @@ public class GameController {
 
     @FXML
     public void turnManagement(ActionEvent event) {
-        System.out.println("PLAYER HAND");
-        player.printHandCards();
-        System.out.println("MACHINE HAND");
-        machines[0].printHandCards();
-
         playerTurn();
-        machineTurn(0);
 
-        /*
-        machines[0].playCard(machines[0].selectPlayCard(table.getPlayDeck()), table.getPlayDeck(), table.getDrawDeck());
-        table.setCurrentCard();
-        machines[0].drawCard(table.getDrawDeck());
+        for (int i = 0; i < machines.length; i++) {
+            int index = i;
+            new Thread(() -> {
+                try {
+                    Thread.sleep(1000 * (index + 1));
+                    Platform.runLater(() -> machineTurn(index));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        }
+    }
 
-        hideCard(machines[0].selectPlayCard(table.getPlayDeck()));
+    public void initialize(String playerName, int machinesAmount){
+        this.playerName = playerName;
+        this.machinesAmount = machinesAmount;
+
+        machines = new Machine[machinesAmount];
+
+        for (int i = 0; i < machines.length; i++) {
+            machines[i] = new Machine();
+            revealMachineHand(i);
+        }
+
+        table.initializeTable(player, machines);
+
+        for (int i = 0; i < player.getHandCards().length; i++){
+            updateCard(i, player.getHandCards()[i].getValue(), player.getHandCards()[i].getIcon());
+        }
         updateCard(4, table.getCurrentCard().getValue(), table.getCurrentCard().getIcon());
-        playButton.setDisable(true);
-
-        KeyFrame step2 = new KeyFrame(Duration.seconds(1), e -> {
-            showCard(machines[0].selectPlayCard(table.getPlayDeck()));
-        });
-        */
-
-        System.out.println("PLAY DECK");
-        table.getPlayDeck().printDeck();
-        System.out.println("PLAYER HAND");
-        player.printHandCards();
-        System.out.println("MACHINE HAND");
-        machines[0].printHandCards();
     }
 
     public void playerTurn(){
         player.playCard(cardIndex, table.getPlayDeck(), table.getDrawDeck());
         table.setCurrentCard();
-        hideCard(cardIndex);
+        hidePlayerCard(cardIndex);
 
         updateCard(4, table.getCurrentCard().getValue(), table.getCurrentCard().getIcon());
         playButton.setDisable(false);
 
         Timeline timeline = new Timeline();
 
-        KeyFrame step1 = new KeyFrame(Duration.seconds(1), e -> {
-            showCard(cardIndex);
+        KeyFrame step1 = new KeyFrame(Duration.seconds(0.5), e -> {
+            showPlayerCard(cardIndex);
             updateCard(cardIndex, player.getHandCards()[cardIndex].getValue(), player.getHandCards()[cardIndex].getIcon());
         });
 
@@ -96,23 +95,20 @@ public class GameController {
     }
 
     public void machineTurn(int index){
-        System.out.println("INDEX GIVEN TO METHOD MACHINE TURN: " + index);
         machines[index].playCard(machines[index].selectPlayCard(table.getPlayDeck()), table.getPlayDeck(), table.getDrawDeck());
         table.setCurrentCard();
         hideMachineCard(index, machines[index].selectPlayCard(table.getPlayDeck()));
 
+        updateCard(4, table.getCurrentCard().getValue(), table.getCurrentCard().getIcon());
+        playButton.setDisable(true);
+
         Timeline timeline = new Timeline();
 
-        KeyFrame step1 = new KeyFrame(Duration.seconds(1), e -> {
-            updateCard(4, table.getCurrentCard().getValue(), table.getCurrentCard().getIcon());
-            playButton.setDisable(true);
-        });
-
-        KeyFrame step2 = new KeyFrame(Duration.seconds(1.5), e -> {
+        KeyFrame step1 = new KeyFrame(Duration.seconds(0.5), e -> {
             showMachineCard(index, machines[index].selectPlayCard(table.getPlayDeck()));
         });
 
-        timeline.getKeyFrames().addAll(step1, step2);
+        timeline.getKeyFrames().addAll(step1);
         timeline.play();
     }
 
@@ -128,14 +124,18 @@ public class GameController {
         }
     }
 
-    public void hideCard(int index){
+    public void updatePoints(){
+
+    }
+
+    public void hidePlayerCard(int index){
         AnchorPane card = (AnchorPane) root.lookup("#card" + index);
         if (card != null) {
             card.setVisible(false);
         }
     }
 
-    public void showCard(int index){
+    public void showPlayerCard(int index){
         AnchorPane card = (AnchorPane) root.lookup("#card" + index);
         if (card != null) {
             card.setVisible(true);
@@ -165,6 +165,13 @@ public class GameController {
             if (card != null){
                 card.setVisible(true);
             }
+        }
+    }
+
+    public void revealMachineHand(int machineIndex){
+        AnchorPane machineHand = (AnchorPane) root.lookup("#machineHand" + machineIndex);
+        if (machineHand != null){
+            machineHand.setVisible(true);
         }
     }
 }

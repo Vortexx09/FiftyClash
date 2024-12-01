@@ -95,7 +95,7 @@
             </Label>
          </children>
       </AnchorPane>
-      <ImageView fitHeight="160.0" fitWidth="124.0" layoutX="728.0" layoutY="370.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="drawDeck" fitHeight="160.0" fitWidth="124.0" layoutX="728.0" layoutY="370.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@images/card-background.jpg" />
          </image>
@@ -121,8 +121,8 @@
          </children>
       </AnchorPane>
       <Button fx:id="playButton" disable="true" layoutX="1048.0" layoutY="741.0" mnemonicParsing="false" onAction="#turnManagement" prefHeight="40.0" prefWidth="67.0" text="Play" />
-      <Button fx:id="startButton" layoutX="1048.0" layoutY="793.0" mnemonicParsing="false" onAction="#startGame" prefHeight="40.0" prefWidth="67.0" text="Start" />
-      <AnchorPane fx:id="machineHand0" prefHeight="200.0" prefWidth="1440.0">
+      <Button fx:id="startButton" layoutX="1048.0" layoutY="793.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="67.0" text="Start" />
+      <AnchorPane fx:id="machineHand0" prefHeight="200.0" prefWidth="1440.0" visible="false">
          <children>
             <ImageView fx:id="machineCard0" fitHeight="160.0" fitWidth="124.0" layoutX="460.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -146,7 +146,7 @@
             </ImageView>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="machineHand2" prefHeight="900.0" prefWidth="200.0">
+      <AnchorPane fx:id="machineHand2" prefHeight="900.0" prefWidth="200.0" visible="false">
          <children>
             <ImageView fx:id="machineCard0" fitHeight="160.0" fitWidth="124.0" layoutX="36.0" layoutY="168.0" pickOnBounds="true" preserveRatio="true" style="-fx-rotate: 90;">
                <image>
@@ -170,9 +170,9 @@
             </ImageView>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="machineHand1" layoutX="1240.0" prefHeight="900.0" prefWidth="200.0">
+      <AnchorPane fx:id="machineHand1" layoutX="1240.0" prefHeight="900.0" prefWidth="200.0" visible="false">
          <children>
-            <ImageView fx:id="machineCard0" fitHeight="160.0" fitWidth="124.0" layoutX="45.0" layoutY="166.0" pickOnBounds="true" preserveRatio="true" style="-fx-rotate: 90;">
+            <ImageView fx:id="machineCard0" fitHeight="160.0" fitWidth="124.0" layoutX="48.0" layoutY="166.0" pickOnBounds="true" preserveRatio="true" style="-fx-rotate: 90;">
                <image>
                   <Image url="@images/card-background.jpg" />
                </image>
@@ -194,5 +194,15 @@
             </ImageView>
          </children>
       </AnchorPane>
+      <Label fx:id="turnsLabel" layoutX="590.0" layoutY="585.0" prefHeight="53.0" prefWidth="260.0" text="'s Turn" textFill="WHITE">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Label>
+      <Label fx:id="pointsLabel" layoutX="662.0" layoutY="275.0" text="Points: " textFill="WHITE">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
