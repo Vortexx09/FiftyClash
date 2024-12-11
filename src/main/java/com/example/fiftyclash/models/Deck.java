@@ -46,12 +46,7 @@ public class Deck {
     public void printDeck () {
         String icon = "";
         for (int i = 0; i < deck.size(); ++i) {
-            switch (deck.get(i).getSuit()){
-                case "diamonds": icon = "♦"; break;
-                case "hearts": icon = "♥"; break;
-                case "clubs": icon = "♣"; break;
-                case "spades": icon = "♠"; break;
-            }
+            icon = deck.get(i).getIcon();
             System.out.println(deck.get(i).getValue() + icon);
         }
     }

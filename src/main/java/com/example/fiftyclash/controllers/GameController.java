@@ -25,10 +25,11 @@ public class GameController {
 
     int cardIndex;
     int machinesAmount;
+    PlayerFactory humanFactory, machineFactory;
     String playerName;
-    Machine[] machines;
-    Player player = new Player();
-    Table table = new Table(player, machines);
+    Player[] machines;
+    Player humanPlayer;
+    Table table;
 
     @FXML
     public void getCardValues(MouseEvent event) {
@@ -59,24 +60,28 @@ public class GameController {
     public void initialize(String playerName, int machinesAmount){
         this.playerName = playerName;
         this.machinesAmount = machinesAmount;
+        this.humanFactory = new HumanFactory();
+        this.machineFactory = new MachineFactory();
 
+        humanPlayer = humanFactory.createPlayer();
         machines = new Machine[machinesAmount];
+        table = new Table(humanPlayer, machines);
 
         for (int i = 0; i < machines.length; i++) {
-            machines[i] = new Machine();
+            machines[i] = machineFactory.createPlayer();
             revealMachineHand(i);
         }
 
-        table.initializeTable(player, machines);
+        table.initializeTable(humanPlayer, machines);
 
-        for (int i = 0; i < player.getHandCards().length; i++){
-            updateCard(i, player.getHandCards()[i].getValue(), player.getHandCards()[i].getIcon());
+        for (int i = 0; i < humanPlayer.getHandCards().length; i++){
+            updateCard(i, humanPlayer.getHandCards()[i].getValue(), humanPlayer.getHandCards()[i].getIcon());
         }
         updateCard(4, table.getCurrentCard().getValue(), table.getCurrentCard().getIcon());
     }
 
     public void playerTurn(){
-        player.playCard(cardIndex, table.getPlayDeck(), table.getDrawDeck());
+        humanPlayer.playCard(cardIndex, table.getPlayDeck(), table.getDrawDeck());
         table.setCurrentCard();
         hidePlayerCard(cardIndex);
 
@@ -87,7 +92,7 @@ public class GameController {
 
         KeyFrame step1 = new KeyFrame(Duration.seconds(0.5), e -> {
             showPlayerCard(cardIndex);
-            updateCard(cardIndex, player.getHandCards()[cardIndex].getValue(), player.getHandCards()[cardIndex].getIcon());
+            updateCard(cardIndex, humanPlayer.getHandCards()[cardIndex].getValue(), humanPlayer.getHandCards()[cardIndex].getIcon());
         });
 
         timeline.getKeyFrames().addAll(step1);
