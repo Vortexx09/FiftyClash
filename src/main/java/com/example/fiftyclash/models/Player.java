@@ -38,12 +38,7 @@ public abstract class Player {
     public void printHandCards() {
         String icon = "";
         for (int i = 0; i < handCards.length; i++) {
-            switch (handCards[i].getSuit()){
-                case "diamonds": icon = "♦"; break;
-                case "hearts": icon = "♥"; break;
-                case "clubs": icon = "♣"; break;
-                case "spades": icon = "♠"; break;
-            }
+            icon = handCards[i].getIcon();
             System.out.println(handCards[i].getValue() + icon);
         }
     }

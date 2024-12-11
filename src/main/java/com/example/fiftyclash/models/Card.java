@@ -1,14 +1,28 @@
 package com.example.fiftyclash.models;
 
+import com.example.fiftyclash.models.cardAppearences.*;
+
 public class Card {
     private String value;
-    private String suit;
-    private String icon;
-    private String color;
+    private CardAppearence appearence;
 
     public Card(String value, String suit) {
         this.value = value;
-        this.suit = suit;
+        switch (suit) {
+            case "hearts":
+                this.appearence = new HeartsAppearence();
+                break;
+            case "spades":
+                this.appearence = new SpadesAppearence();
+                break;
+            case "clubs":
+                this.appearence = new ClubsAppearence();
+                break;
+            case "diamonds":
+                this.appearence = new DiamondsAppearence();
+                break;
+        }
+
     }
 
     public int getCardValue() {
@@ -24,40 +38,14 @@ public class Card {
     }
 
     public String getIcon(){
-        switch (suit) {
-            case "diamonds":
-                icon = "♦";
-                break;
-            case "hearts":
-                icon = "♥";
-                break;
-            case "clubs":
-                icon = "♣";
-                break;
-            case "spades":
-                icon = "♠";
-                break;
-        }
-        return icon;
+        return appearence.getIcon();
     }
 
     public String getColor() {
-        switch (icon){
-            case "♦", "♥":
-                color = "RED";
-                break;
-            case "♣", "♠":
-                color = "BLACK";
-                break;
-        }
-        return color;
+        return appearence.getColor();
     }
 
     public String getValue(){
         return value;
-    }
-
-    public String getSuit() {
-        return suit;
     }
 }
