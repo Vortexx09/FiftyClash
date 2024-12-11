@@ -1,14 +1,12 @@
 package com.example.fiftyclash.models;
 
-public class Machine extends Player{
-    private Card[] handCards;
-    private boolean canPlay;
-    private boolean isMachineTurn;
+public class Machine extends Player {
 
     public Machine() {
         handCards = getHandCards();
     }
 
+    @Override
     public int selectPlayCard(Deck playDeck){
         int number = handCards[0].getCardValue();
         int points = playDeck.getCurrentPoints();

@@ -3,25 +3,25 @@ package com.example.fiftyclash.models;
 import java.util.Collections;
 
 public class Table {
-    private Player player;
-    private Machine[] machines;
+    private Player humanPlayer;
+    private Player[] machines;
     private Card currentCard;
     private Deck drawDeck;
     private Deck playDeck;
 
-    public Table(Player player, Machine[] machinesList) {
+    public Table(Player player, Player[] machinesList) {
         this.drawDeck = new Deck();
-        this.player = player;
+        this.humanPlayer = player;
         this.machines = machinesList;
         this.playDeck = new Deck();
     }
 
-    public void initializeTable(Player player, Machine[] machinesList) {
+    public void initializeTable(Player player, Player[] machinesList) {
         drawDeck.initializeDeck();
         drawDeck.printDeck();
 
         for (int i = 0; i < player.getHandCards().length; i++){
-            player.drawCard(drawDeck);
+            humanPlayer.drawCard(drawDeck);
         }
 
         for (int i = 0; i < machinesList.length; i++) {
@@ -54,7 +54,7 @@ public class Table {
 
     public void checkCurrentPoints(Player player) {
         if (playDeck.getCurrentPoints() > 50){
-            player.setCanPlay(false);
+            humanPlayer.setCanPlay(false);
         }
     }
 
@@ -70,7 +70,7 @@ public class Table {
         return currentCard;
     }
 
-    public Machine[] getMachine(){
+    public Player[] getMachine(){
         return machines;
     }
 }

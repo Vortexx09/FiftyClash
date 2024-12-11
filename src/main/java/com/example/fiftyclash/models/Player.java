@@ -2,13 +2,22 @@ package com.example.fiftyclash.models;
 
 import java.util.ArrayList;
 
-public class Player {
-    private Card[] handCards;
-    private boolean canPlay;
-    private boolean isPlayerTurn;
+public abstract class Player {
+
+    protected Card[] handCards;
+    protected boolean canPlay;
+    protected boolean isPlayerTurn;
 
     public Player() {
         handCards = new Card[4];
+    }
+
+    public Card[] getHandCards() {
+        return handCards;
+    }
+
+    public void setCanPlay(boolean canPlay) {
+        this.canPlay = canPlay;
     }
 
     public void drawCard(Deck drawDeck) {
@@ -39,12 +48,7 @@ public class Player {
         }
     }
 
-    public Card[] getHandCards() {
-        return handCards;
+    public int selectPlayCard(Deck playDeck) {
+        return 0;
     }
-
-    public void setCanPlay(boolean canPlay) {
-        this.canPlay = canPlay;
-    }
-
 }
