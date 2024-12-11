@@ -1,5 +1,6 @@
 package com.example.fiftyclash.views;
 
+import com.example.fiftyclash.controllers.GameController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -8,6 +9,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class GameView extends Stage {
+    private final GameController gameController;
     /**
      * Initializes the GameView by loading the FXML layout and setting
      * the window's title, scene, and other properties.
@@ -17,7 +19,8 @@ public class GameView extends Stage {
     public GameView() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/fiftyclash/game-view.fxml"));
         Parent root = loader.load();
-        this.setTitle("Naval Battle");
+        this.setTitle("Fifty Clash");
+        this.gameController = loader.getController();
         Scene scene = new Scene(root);
         this.setScene(scene);
         this.setResizable(false);
@@ -27,7 +30,7 @@ public class GameView extends Stage {
     /**
      * Holds the single instance of GameView, following the Singleton pattern.
      */
-    private static class HelloViewHolder {
+    private static class GameViewHolder {
         private static GameView INSTANCE;
     }
 
@@ -41,10 +44,15 @@ public class GameView extends Stage {
      */
     public static GameView getInstance() throws IOException {
 
-        if (HelloViewHolder.INSTANCE == null) {
-            return HelloViewHolder.INSTANCE = new GameView();
+        if (GameViewHolder.INSTANCE == null) {
+            return GameViewHolder.INSTANCE = new GameView();
         } else {
-            return HelloViewHolder.INSTANCE;
+            return GameViewHolder.INSTANCE;
         }
     }
+
+    public GameController getGameController() {
+        return gameController;
+    }
+
 }
