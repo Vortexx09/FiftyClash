@@ -7,28 +7,28 @@ public class Machine extends Player {
     }
 
     @Override
-    public int selectPlayCard(Deck playDeck){
-        int number = handCards[0].getCardValue();
+    public int selectPlayCard(Deck playDeck) {
         int points = playDeck.getCurrentPoints();
-        int minCardIndex = 0;
-        int maxCardIndex = 0;
+        int selectedCardIndex = -1;
+        int closestTo50 = Integer.MAX_VALUE;
 
-        if (points > 40){
-            for (int i = 0; i < handCards.length; i++) {
-                if (handCards[i].getCardValue() < number) {
-                    minCardIndex = i;
+        for (int i = 0; i < handCards.length; i++) {
+            int cardValue = handCards[i].getCardValue();
+
+            if (points + cardValue <= 50) {
+                int distanceTo50 = 50 - (points + cardValue);
+
+                if (distanceTo50 < closestTo50) {
+                    closestTo50 = distanceTo50;
+                    selectedCardIndex = i;
                 }
             }
-            return minCardIndex;
         }
-        else if (points < 40){
-            for (int i = 0; i < handCards.length; i++) {
-                if (handCards[i].getCardValue() > number) {
-                    maxCardIndex = i;
-                }
-            }
-            return maxCardIndex;
+
+        if (selectedCardIndex == -1) {
+            System.out.println("No valid card to play, player loses.");
         }
-        return minCardIndex;
+
+        return selectedCardIndex;
     }
 }

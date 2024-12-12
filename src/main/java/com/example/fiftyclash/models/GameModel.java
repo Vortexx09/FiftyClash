@@ -1,5 +1,6 @@
 package com.example.fiftyclash.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameModel {
@@ -47,9 +48,18 @@ public class GameModel {
     }
 
     public int playMachine(int index) {
+        if (!isMachineActive(index)) {
+            System.out.println("Machine " + index + " is not active.");
+            return -1;
+        }
         int selectedCard = machines[index].selectPlayCard(table.getPlayDeck());
-        machines[index].playCard(selectedCard, table.getPlayDeck(), table.getDrawDeck());
-        table.setCurrentCard();
+        if (selectedCard == -1) {
+            eliminatePlayer(index);
+        } else {
+            machines[index].playCard(selectedCard, table.getPlayDeck(), table.getDrawDeck());
+            table.setCurrentCard();
+        }
+
         return selectedCard;
     }
 
@@ -63,5 +73,42 @@ public class GameModel {
 
     public String getPlayerName() {
         return playerName;
+    }
+
+    public List<Integer> getActiveMachineIndexes() {
+        List<Integer> indexes = new ArrayList<>();
+        for (int i = 0; i < machines.length; i++) {
+            if (isMachineActive(i)) {
+                indexes.add(i);
+            }
+        }
+        return indexes;
+    }
+
+    public void eliminatePlayer(int index) {
+        Card[] playerCards;
+        if (index == 0) {
+            playerCards = humanPlayer.getHandCards();
+            returnCardsToDeck(playerCards);
+        } else {
+            playerCards = machines[index].getHandCards();
+            returnCardsToDeck(playerCards);
+            machines[index] = null;
+            machinesAmount--;
+            System.out.println("Machine " + index + " has been eliminated.");
+        }
+
+    }
+
+    public boolean isMachineActive(int index) {
+        return index >= 0 && index < machines.length && machines[index] != null;
+    }
+
+    public void returnCardsToDeck(Card[] cards) {
+        table.returnCardsToDeck(cards);
+    }
+
+    public int getDeckSize() {
+        return table.getDrawDeck().getSize();
     }
 }

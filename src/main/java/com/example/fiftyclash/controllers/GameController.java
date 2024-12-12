@@ -13,6 +13,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
 
+import java.util.List;
+
 public class GameController {
     @FXML
     private AnchorPane root, machineHand0, machineHand1, machineHand2;
@@ -46,7 +48,13 @@ public class GameController {
             new Thread(() -> {
                 try {
                     Thread.sleep(1000 * (index + 1));
-                    Platform.runLater(() -> machineTurn(index));
+                    Platform.runLater(() -> {
+                        if (game.isMachineActive(index)) { // Verificar si la máquina sigue activa
+                            machineTurn(index);
+                        } else {
+                            System.out.println("Maquina " + index + " inactiva");
+                        }
+                    });
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -74,7 +82,7 @@ public class GameController {
         game.playCard(cardIndex);
         game.setCurrentCard();
         hidePlayerCard(cardIndex);
-
+        System.out.println("Deck size: " + game.getDeckSize());
         pointsLabel1.setText(String.valueOf(game.getCurrentPoints()));
 
         updateCard(4, game.getCurrentCard().getValue(), game.getCurrentCard().getIcon());
@@ -94,21 +102,27 @@ public class GameController {
 
     public void machineTurn(int index){
         int selectedCard = game.playMachine(index);
-        hideMachineCard(index, selectedCard);
-        pointsLabel1.setText(String.valueOf(game.getCurrentPoints()));
+        if (selectedCard == -1) {
+            hideMachineHand(index);
+        } else {
+            hideMachineCard(index, selectedCard);
+            pointsLabel1.setText(String.valueOf(game.getCurrentPoints()));
 
+            System.out.println("Deck size: " + game.getDeckSize());
 
-        updateCard(4, game.getCurrentCard().getValue(), game.getCurrentCard().getIcon());
-        playButton.setDisable(true);
+            updateCard(4, game.getCurrentCard().getValue(), game.getCurrentCard().getIcon());
+            playButton.setDisable(true);
 
-        Timeline timeline = new Timeline();
+            Timeline timeline = new Timeline();
 
-        KeyFrame step1 = new KeyFrame(Duration.seconds(0.5), e -> {
-            showMachineCard(index, selectedCard);
-        });
+            KeyFrame step1 = new KeyFrame(Duration.seconds(0.5), e -> {
+                showMachineCard(index, selectedCard);
+            });
 
-        timeline.getKeyFrames().addAll(step1);
-        timeline.play();
+            timeline.getKeyFrames().addAll(step1);
+            timeline.play();
+        }
+
         turnsLabel.setText((index + 2) <= game.getMachinesAmount() ? "Machine" + (index + 2) + "'s turn"  : game.getPlayerName() + "'s turn");
     }
 
@@ -168,6 +182,13 @@ public class GameController {
         AnchorPane machineHand = (AnchorPane) root.lookup("#machineHand" + machineIndex);
         if (machineHand != null){
             machineHand.setVisible(true);
+        }
+    }
+
+    public void hideMachineHand(int machineIndex){
+        AnchorPane machineHand = (AnchorPane) root.lookup("#machineHand" + machineIndex);
+        if (machineHand != null){
+            machineHand.setVisible(false);
         }
     }
 }
