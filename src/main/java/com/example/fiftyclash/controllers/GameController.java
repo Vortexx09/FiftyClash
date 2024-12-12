@@ -41,25 +41,70 @@ public class GameController {
     @FXML
     public void turnManagement(ActionEvent event) {
         playerTurn();
-
+        int turnCount = 0;
         for (int i = 0; i < game.getMachinesAmount(); i++) {
             int index = i;
-
+            if (!game.isMachineActive(index)) {
+                System.out.println("Skipped machine " + (index + 1));
+                continue;
+            }
+            int delay = 1000 * (++turnCount);
             new Thread(() -> {
                 try {
-                    Thread.sleep(1000 * (index + 1));
+                    Thread.sleep(delay);
                     Platform.runLater(() -> {
-                        if (game.isMachineActive(index)) { // Verificar si la máquina sigue activa
-                            machineTurn(index);
-                        } else {
-                            System.out.println("Maquina " + index + " inactiva");
+                        if (game.isMachineActive(index)) {
+                            switch (index) {
+                                case 0:
+                                    turnsLabel.setText("Machine1's turn");
+                                    break;
+                                case 1:
+                                    turnsLabel.setText("Machine2's turn");
+                                    break;
+                                case 2:
+                                    turnsLabel.setText("Machine3's turn");
+                                    break;
+                            }
                         }
                     });
+
+                    Thread.sleep(500);
+
+                    Platform.runLater(() -> {
+                        if (game.isMachineActive(index)) {
+                            machineTurn(index);
+                        } else {
+                            System.out.println("Machine " + index + " is inactive.");
+                        }
+                    });
+
+                    Thread.sleep(500);
+
+                    Platform.runLater(() -> {
+                        if (isLastMachine(index)) {
+                            turnsLabel.setText(game.getPlayerName() + "'s turn");
+                        }
+                    });
+
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }).start();
         }
+
+    }
+
+    public boolean isLastMachine(int index) {
+        for (int i = index; i < game.getMachinesAmount(); i++) {
+            try {
+                if (game.isMachineActive(i + 1)) {
+                    return false;
+                }
+            } catch (IndexOutOfBoundsException e) {
+                return true;
+            }
+        }
+        return true;
     }
 
     public void initialize(String playerName, int machinesAmount){
@@ -75,6 +120,7 @@ public class GameController {
             updateCard(i, humanCards[i].getValue(), humanCards[i].getIcon());
         }
         updateCard(4, game.getCurrentCard().getValue(), game.getCurrentCard().getIcon());
+        turnsLabel.setText(game.getPlayerName() + "'s turn");
         pointsLabel1.setText(String.valueOf(game.getCurrentPoints()));
     }
 
@@ -97,7 +143,6 @@ public class GameController {
 
         timeline.getKeyFrames().addAll(step1);
         timeline.play();
-        turnsLabel.setText("Machine1's turn");
     }
 
     public void machineTurn(int index){
@@ -123,7 +168,7 @@ public class GameController {
             timeline.play();
         }
 
-        turnsLabel.setText((index + 2) <= game.getMachinesAmount() ? "Machine" + (index + 2) + "'s turn"  : game.getPlayerName() + "'s turn");
+
     }
 
     public void updateCard(int index, String number, String icon){

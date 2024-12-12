@@ -87,17 +87,10 @@ public class GameModel {
 
     public void eliminatePlayer(int index) {
         Card[] playerCards;
-        if (index == 0) {
-            playerCards = humanPlayer.getHandCards();
-            returnCardsToDeck(playerCards);
-        } else {
-            playerCards = machines[index].getHandCards();
-            returnCardsToDeck(playerCards);
-            machines[index] = null;
-            machinesAmount--;
-            System.out.println("Machine " + index + " has been eliminated.");
-        }
-
+        playerCards = machines[index].getHandCards();
+        returnCardsToDeck(playerCards);
+        machines[index] = null;
+        System.out.println("Machine " + index + " has been eliminated.");
     }
 
     public boolean isMachineActive(int index) {
