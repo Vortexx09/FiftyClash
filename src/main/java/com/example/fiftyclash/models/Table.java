@@ -52,6 +52,12 @@ public class Table {
         Collections.shuffle(drawDeck.getDeck());
     }
 
+    public void returnCardsToDeck(Card[] cards){
+        for (Card card : cards) {
+            drawDeck.getDeck().add(card);
+        }
+    }
+
     public void checkCurrentPoints(Player player) {
         if (playDeck.getCurrentPoints() > 50){
             humanPlayer.setCanPlay(false);
@@ -72,5 +78,9 @@ public class Table {
 
     public Player[] getMachine(){
         return machines;
+    }
+
+    public int getCurrentPoints(){
+        return playDeck.getCurrentPoints();
     }
 }

@@ -13,23 +13,21 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
 
+import java.util.List;
+
 public class GameController {
     @FXML
     private AnchorPane root, machineHand0, machineHand1, machineHand2;
 
     @FXML
-    private Label pointsLabel, turnsLabel;
+    private Label pointsLabel1, turnsLabel;
 
     @FXML
     private Button playButton, startButton;
 
     int cardIndex;
-    int machinesAmount;
-    PlayerFactory humanFactory, machineFactory;
-    String playerName;
-    Player[] machines;
-    Player humanPlayer;
-    Table table;
+
+    GameModel game;
 
     @FXML
     public void getCardValues(MouseEvent event) {
@@ -43,56 +41,104 @@ public class GameController {
     @FXML
     public void turnManagement(ActionEvent event) {
         playerTurn();
-
-        for (int i = 0; i < machines.length; i++) {
+        int turnCount = 0;
+        for (int i = 0; i < game.getMachinesAmount(); i++) {
             int index = i;
+            if (!game.isMachineActive(index)) {
+                System.out.println("Skipped machine " + (index + 1));
+                continue;
+            }
+            int delay = 1000 * (++turnCount);
             new Thread(() -> {
                 try {
-                    Thread.sleep(1000 * (index + 1));
-                    Platform.runLater(() -> machineTurn(index));
+                    Thread.sleep(delay);
+                    Platform.runLater(() -> {
+                        if (game.isMachineActive(index)) {
+                            switch (index) {
+                                case 0:
+                                    turnsLabel.setText("Machine1's turn");
+                                    break;
+                                case 1:
+                                    turnsLabel.setText("Machine2's turn");
+                                    break;
+                                case 2:
+                                    turnsLabel.setText("Machine3's turn");
+                                    break;
+                            }
+                        }
+                    });
+
+                    Thread.sleep(500);
+
+                    Platform.runLater(() -> {
+                        if (game.isMachineActive(index)) {
+                            machineTurn(index);
+                        } else {
+                            System.out.println("Machine " + index + " is inactive.");
+                        }
+                    });
+
+                    Thread.sleep(500);
+
+                    Platform.runLater(() -> {
+                        if (isLastMachine(index)) {
+                            turnsLabel.setText(game.getPlayerName() + "'s turn");
+                        }
+                    });
+
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }).start();
         }
+
+    }
+
+    public boolean isLastMachine(int index) {
+        for (int i = index; i < game.getMachinesAmount(); i++) {
+            try {
+                if (game.isMachineActive(i + 1)) {
+                    return false;
+                }
+            } catch (IndexOutOfBoundsException e) {
+                return true;
+            }
+        }
+        return true;
     }
 
     public void initialize(String playerName, int machinesAmount){
-        this.playerName = playerName;
-        this.machinesAmount = machinesAmount;
-        this.humanFactory = new HumanFactory();
-        this.machineFactory = new MachineFactory();
+        game = new GameModel(playerName, machinesAmount);
 
-        humanPlayer = humanFactory.createPlayer();
-        machines = new Machine[machinesAmount];
-        table = new Table(humanPlayer, machines);
-
-        for (int i = 0; i < machines.length; i++) {
-            machines[i] = machineFactory.createPlayer();
+        for (int i = 0; i < game.getMachinesAmount(); i++) {
             revealMachineHand(i);
         }
 
-        table.initializeTable(humanPlayer, machines);
+        Card[] humanCards = game.getHumanCards();
 
-        for (int i = 0; i < humanPlayer.getHandCards().length; i++){
-            updateCard(i, humanPlayer.getHandCards()[i].getValue(), humanPlayer.getHandCards()[i].getIcon());
+        for (int i = 0; i < humanCards.length; i++){
+            updateCard(i, humanCards[i].getValue(), humanCards[i].getIcon());
         }
-        updateCard(4, table.getCurrentCard().getValue(), table.getCurrentCard().getIcon());
+        updateCard(4, game.getCurrentCard().getValue(), game.getCurrentCard().getIcon());
+        turnsLabel.setText(game.getPlayerName() + "'s turn");
+        pointsLabel1.setText(String.valueOf(game.getCurrentPoints()));
     }
 
     public void playerTurn(){
-        humanPlayer.playCard(cardIndex, table.getPlayDeck(), table.getDrawDeck());
-        table.setCurrentCard();
+        game.playCard(cardIndex);
+        game.setCurrentCard();
         hidePlayerCard(cardIndex);
+        System.out.println("Deck size: " + game.getDeckSize());
+        pointsLabel1.setText(String.valueOf(game.getCurrentPoints()));
 
-        updateCard(4, table.getCurrentCard().getValue(), table.getCurrentCard().getIcon());
+        updateCard(4, game.getCurrentCard().getValue(), game.getCurrentCard().getIcon());
         playButton.setDisable(false);
 
         Timeline timeline = new Timeline();
 
         KeyFrame step1 = new KeyFrame(Duration.seconds(0.5), e -> {
             showPlayerCard(cardIndex);
-            updateCard(cardIndex, humanPlayer.getHandCards()[cardIndex].getValue(), humanPlayer.getHandCards()[cardIndex].getIcon());
+            updateCard(cardIndex, game.getHumanCards()[cardIndex].getValue(), game.getHumanCards()[cardIndex].getIcon());
         });
 
         timeline.getKeyFrames().addAll(step1);
@@ -100,21 +146,29 @@ public class GameController {
     }
 
     public void machineTurn(int index){
-        machines[index].playCard(machines[index].selectPlayCard(table.getPlayDeck()), table.getPlayDeck(), table.getDrawDeck());
-        table.setCurrentCard();
-        hideMachineCard(index, machines[index].selectPlayCard(table.getPlayDeck()));
+        int selectedCard = game.playMachine(index);
+        if (selectedCard == -1) {
+            hideMachineHand(index);
+        } else {
+            hideMachineCard(index, selectedCard);
+            pointsLabel1.setText(String.valueOf(game.getCurrentPoints()));
 
-        updateCard(4, table.getCurrentCard().getValue(), table.getCurrentCard().getIcon());
-        playButton.setDisable(true);
+            System.out.println("Deck size: " + game.getDeckSize());
 
-        Timeline timeline = new Timeline();
+            updateCard(4, game.getCurrentCard().getValue(), game.getCurrentCard().getIcon());
+            playButton.setDisable(true);
 
-        KeyFrame step1 = new KeyFrame(Duration.seconds(0.5), e -> {
-            showMachineCard(index, machines[index].selectPlayCard(table.getPlayDeck()));
-        });
+            Timeline timeline = new Timeline();
 
-        timeline.getKeyFrames().addAll(step1);
-        timeline.play();
+            KeyFrame step1 = new KeyFrame(Duration.seconds(0.5), e -> {
+                showMachineCard(index, selectedCard);
+            });
+
+            timeline.getKeyFrames().addAll(step1);
+            timeline.play();
+        }
+
+
     }
 
     public void updateCard(int index, String number, String icon){
@@ -127,10 +181,6 @@ public class GameController {
             if (label2 != null) label2.setText(icon);
             if (label3 != null) label3.setText(number);
         }
-    }
-
-    public void updatePoints(){
-
     }
 
     public void hidePlayerCard(int index){
@@ -177,6 +227,13 @@ public class GameController {
         AnchorPane machineHand = (AnchorPane) root.lookup("#machineHand" + machineIndex);
         if (machineHand != null){
             machineHand.setVisible(true);
+        }
+    }
+
+    public void hideMachineHand(int machineIndex){
+        AnchorPane machineHand = (AnchorPane) root.lookup("#machineHand" + machineIndex);
+        if (machineHand != null){
+            machineHand.setVisible(false);
         }
     }
 }
