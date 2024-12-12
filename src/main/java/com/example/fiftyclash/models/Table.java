@@ -73,4 +73,8 @@ public class Table {
     public Player[] getMachine(){
         return machines;
     }
+
+    public int getCurrentPoints(){
+        return playDeck.getCurrentPoints();
+    }
 }

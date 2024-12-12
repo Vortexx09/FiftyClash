@@ -18,18 +18,14 @@ public class GameController {
     private AnchorPane root, machineHand0, machineHand1, machineHand2;
 
     @FXML
-    private Label pointsLabel, turnsLabel;
+    private Label pointsLabel1, turnsLabel;
 
     @FXML
     private Button playButton, startButton;
 
     int cardIndex;
-    int machinesAmount;
-    PlayerFactory humanFactory, machineFactory;
-    String playerName;
-    Player[] machines;
-    Player humanPlayer;
-    Table table;
+
+    GameModel game;
 
     @FXML
     public void getCardValues(MouseEvent event) {
@@ -44,8 +40,9 @@ public class GameController {
     public void turnManagement(ActionEvent event) {
         playerTurn();
 
-        for (int i = 0; i < machines.length; i++) {
+        for (int i = 0; i < game.getMachinesAmount(); i++) {
             int index = i;
+
             new Thread(() -> {
                 try {
                     Thread.sleep(1000 * (index + 1));
@@ -58,63 +55,61 @@ public class GameController {
     }
 
     public void initialize(String playerName, int machinesAmount){
-        this.playerName = playerName;
-        this.machinesAmount = machinesAmount;
-        this.humanFactory = new HumanFactory();
-        this.machineFactory = new MachineFactory();
+        game = new GameModel(playerName, machinesAmount);
 
-        humanPlayer = humanFactory.createPlayer();
-        machines = new Machine[machinesAmount];
-        table = new Table(humanPlayer, machines);
-
-        for (int i = 0; i < machines.length; i++) {
-            machines[i] = machineFactory.createPlayer();
+        for (int i = 0; i < game.getMachinesAmount(); i++) {
             revealMachineHand(i);
         }
 
-        table.initializeTable(humanPlayer, machines);
+        Card[] humanCards = game.getHumanCards();
 
-        for (int i = 0; i < humanPlayer.getHandCards().length; i++){
-            updateCard(i, humanPlayer.getHandCards()[i].getValue(), humanPlayer.getHandCards()[i].getIcon());
+        for (int i = 0; i < humanCards.length; i++){
+            updateCard(i, humanCards[i].getValue(), humanCards[i].getIcon());
         }
-        updateCard(4, table.getCurrentCard().getValue(), table.getCurrentCard().getIcon());
+        updateCard(4, game.getCurrentCard().getValue(), game.getCurrentCard().getIcon());
+        pointsLabel1.setText(String.valueOf(game.getCurrentPoints()));
     }
 
     public void playerTurn(){
-        humanPlayer.playCard(cardIndex, table.getPlayDeck(), table.getDrawDeck());
-        table.setCurrentCard();
+        game.playCard(cardIndex);
+        game.setCurrentCard();
         hidePlayerCard(cardIndex);
 
-        updateCard(4, table.getCurrentCard().getValue(), table.getCurrentCard().getIcon());
+        pointsLabel1.setText(String.valueOf(game.getCurrentPoints()));
+
+        updateCard(4, game.getCurrentCard().getValue(), game.getCurrentCard().getIcon());
         playButton.setDisable(false);
 
         Timeline timeline = new Timeline();
 
         KeyFrame step1 = new KeyFrame(Duration.seconds(0.5), e -> {
             showPlayerCard(cardIndex);
-            updateCard(cardIndex, humanPlayer.getHandCards()[cardIndex].getValue(), humanPlayer.getHandCards()[cardIndex].getIcon());
+            updateCard(cardIndex, game.getHumanCards()[cardIndex].getValue(), game.getHumanCards()[cardIndex].getIcon());
         });
 
         timeline.getKeyFrames().addAll(step1);
         timeline.play();
+        turnsLabel.setText("Machine1's turn");
     }
 
     public void machineTurn(int index){
-        machines[index].playCard(machines[index].selectPlayCard(table.getPlayDeck()), table.getPlayDeck(), table.getDrawDeck());
-        table.setCurrentCard();
-        hideMachineCard(index, machines[index].selectPlayCard(table.getPlayDeck()));
+        int selectedCard = game.playMachine(index);
+        hideMachineCard(index, selectedCard);
+        pointsLabel1.setText(String.valueOf(game.getCurrentPoints()));
 
-        updateCard(4, table.getCurrentCard().getValue(), table.getCurrentCard().getIcon());
+
+        updateCard(4, game.getCurrentCard().getValue(), game.getCurrentCard().getIcon());
         playButton.setDisable(true);
 
         Timeline timeline = new Timeline();
 
         KeyFrame step1 = new KeyFrame(Duration.seconds(0.5), e -> {
-            showMachineCard(index, machines[index].selectPlayCard(table.getPlayDeck()));
+            showMachineCard(index, selectedCard);
         });
 
         timeline.getKeyFrames().addAll(step1);
         timeline.play();
+        turnsLabel.setText((index + 2) <= game.getMachinesAmount() ? "Machine" + (index + 2) + "'s turn"  : game.getPlayerName() + "'s turn");
     }
 
     public void updateCard(int index, String number, String icon){
@@ -127,10 +122,6 @@ public class GameController {
             if (label2 != null) label2.setText(icon);
             if (label3 != null) label3.setText(number);
         }
-    }
-
-    public void updatePoints(){
-
     }
 
     public void hidePlayerCard(int index){
