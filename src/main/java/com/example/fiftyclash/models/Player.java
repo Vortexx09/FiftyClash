@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public abstract class Player {
 
     protected Card[] handCards;
-    protected boolean canPlay;
+    protected boolean canPlay = true;
     protected boolean isPlayerTurn;
 
     public Player() {
@@ -14,10 +14,6 @@ public abstract class Player {
 
     public Card[] getHandCards() {
         return handCards;
-    }
-
-    public void setCanPlay(boolean canPlay) {
-        this.canPlay = canPlay;
     }
 
     public void drawCard(Deck drawDeck) {
@@ -45,5 +41,13 @@ public abstract class Player {
 
     public int selectPlayCard(int currentPoints) {
         return 0;
+    }
+
+    public void setCanPlay(boolean canPlay) {
+        this.canPlay = canPlay;
+    }
+
+    public boolean getCanPlay() {
+        return canPlay;
     }
 }
