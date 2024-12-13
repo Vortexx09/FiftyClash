@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameModel {
-
+    int currentPoints;
     int machinesAmount;
     PlayerFactory humanFactory, machineFactory;
     String playerName;
@@ -32,23 +32,6 @@ public class GameModel {
         }
 
         table.initializeTable(humanPlayer, machines);
-
-    }
-
-    public Card[] getHumanCards() {
-        return humanPlayer.getHandCards();
-    }
-
-    public Card getCurrentCard() {
-        return table.getCurrentCard();
-    }
-
-    public void playCard(int index) {
-        humanPlayer.playCard(index, table.getPlayDeck(), table.getDrawDeck());
-    }
-
-    public void setCurrentCard() {
-        table.setCurrentCard();
     }
 
     public int playMachine(int index) {
@@ -56,7 +39,7 @@ public class GameModel {
             System.out.println("Machine " + index + " is not active.");
             return -1;
         }
-        int selectedCard = machines[index].selectPlayCard(table.getPlayDeck());
+        int selectedCard = machines[index].selectPlayCard(currentPoints);
         if (selectedCard == -1) {
             eliminatePlayer(index);
         } else {
@@ -65,18 +48,6 @@ public class GameModel {
         }
 
         return selectedCard;
-    }
-
-    public int getMachinesAmount() {
-        return machinesAmount;
-    }
-
-    public int getCurrentPoints() {
-        return table.getCurrentPoints();
-    }
-
-    public String getPlayerName() {
-        return playerName;
     }
 
     public List<Integer> getActiveMachineIndexes() {
@@ -95,6 +66,50 @@ public class GameModel {
         returnCardsToDeck(playerCards);
         machines[index] = null;
         System.out.println("Machine " + index + " has been eliminated.");
+    }
+
+    public void updateTurnLabel(int playerIndex) {
+        String message;
+
+        if (playerIndex == 0) {
+            message = playerName + "'s turn";
+        } else {
+            message = "Machine's " + playerIndex + " turn";
+        }
+
+        notifyObservers(message);
+    }
+
+    public Card[] getHumanCards() {
+        return humanPlayer.getHandCards();
+    }
+
+    public Card getCurrentCard() {
+        return table.getCurrentCard();
+    }
+
+    public void playCard(int index) {
+        humanPlayer.playCard(index, table.getPlayDeck(), table.getDrawDeck());
+    }
+
+    public void setCurrentCard() {
+        table.setCurrentCard();
+    }
+
+    public int getMachinesAmount() {
+        return machinesAmount;
+    }
+
+    public void setCurrentPoints(int currentPoints) {
+        this.currentPoints += currentPoints;
+    }
+
+    public int getCurrentPoints() {
+        return currentPoints;
+    }
+
+    public String getPlayerName() {
+        return playerName;
     }
 
     public boolean isMachineActive(int index) {
@@ -123,19 +138,11 @@ public class GameModel {
         }
     }
 
-    public void updateTurnLabel(int playerIndex) {
-        String message;
-
-        if (playerIndex == 0) {
-            message = playerName + "'s turn";
-        } else {
-            message = "Machine's " + playerIndex + " turn";
-        }
-
-        notifyObservers(message);
-    }
-
     public void updatePointsLabel(int points) {
         notifyObservers(String.valueOf(points));
+    }
+
+    public Table getTable(){
+        return table;
     }
 }

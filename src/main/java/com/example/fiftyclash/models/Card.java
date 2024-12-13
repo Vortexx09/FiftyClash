@@ -32,6 +32,9 @@ public class Card {
         else if (value == "A"){
             return 10;
         }
+        else if (value == "9"){
+            return 0;
+        }
         else{
             return Integer.parseInt(value);
         }
