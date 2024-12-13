@@ -2,6 +2,7 @@ package com.example.fiftyclash.models;
 
 import java.util.Collections;
 
+
 public class Table {
     private Player humanPlayer;
     private Player[] machines;
@@ -43,11 +44,9 @@ public class Table {
     }
 
     public void refillDeck(){
-        if (drawDeck.getDeck().isEmpty()) {
-            for (int i = playDeck.getDeck().size() - 1; i > 0; i--) {
-                drawDeck.getDeck().add(i, playDeck.getDeck().get(i));
-                playDeck.getDeck().remove(i);
-            }
+        for (int i = playDeck.getDeck().size() - 1; i > 0; i--) {
+            drawDeck.addCard(playDeck.getDeck().get(i));
+            playDeck.removeCard(i);
         }
         Collections.shuffle(drawDeck.getDeck());
     }
@@ -55,12 +54,6 @@ public class Table {
     public void returnCardsToDeck(Card[] cards){
         for (Card card : cards) {
             drawDeck.getDeck().add(card);
-        }
-    }
-
-    public void checkCurrentPoints(Player player) {
-        if (playDeck.getCurrentPoints() > 50){
-            humanPlayer.setCanPlay(false);
         }
     }
 
@@ -78,9 +71,5 @@ public class Table {
 
     public Player[] getMachine(){
         return machines;
-    }
-
-    public int getCurrentPoints(){
-        return playDeck.getCurrentPoints();
     }
 }
