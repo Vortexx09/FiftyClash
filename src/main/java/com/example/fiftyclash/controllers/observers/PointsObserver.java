@@ -13,7 +13,7 @@ public class PointsObserver implements Observer {
 
     @Override
     public void update(String message) {
-        if (message.matches("\\d+")) {
+        if (message.matches("-?\\d+")) {
             Platform.runLater(() -> pointsLabel.setText(message));
         }
     }
