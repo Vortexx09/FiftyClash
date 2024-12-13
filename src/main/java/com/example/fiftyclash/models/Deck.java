@@ -22,33 +22,16 @@ public class Deck {
         Collections.shuffle(deck);
     }
 
-    public int getCurrentPoints() {
-        int pointsAccumulator = 0;
-        if (deck != null) {
-            for (Card card : deck) {
-                switch (card.getValue()) {
-                    case "A":
-                        if (pointsAccumulator + card.getCardValue() > 50) pointsAccumulator += 1;
-                        else pointsAccumulator += card.getCardValue();
-                        break;
-                    case "9":
-                        pointsAccumulator += 0;
-                        break;
-                    default:
-                        pointsAccumulator += card.getCardValue();
-                        break;
-                }
-            }
-        }
-        return pointsAccumulator;
-    }
-
     public void printDeck () {
         String icon = "";
         for (int i = 0; i < deck.size(); ++i) {
             icon = deck.get(i).getIcon();
             System.out.println(deck.get(i).getValue() + icon);
         }
+    }
+
+    public boolean deckIsEmpty(){
+        return deck.isEmpty();
     }
 
     public void addCard(Card card) {

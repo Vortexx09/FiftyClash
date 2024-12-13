@@ -42,8 +42,20 @@ public class GameController {
 
     @FXML
     public void turnManagement(ActionEvent event) {
-        playerTurn();
+        if (!game.getTable().getDrawDeck().deckIsEmpty()){
+            playerTurn();
+            System.out.println("AFTER PLAYER TURN");
+            game.getTable().getPlayDeck().printDeck();
+        }
+        else{
+            game.getTable().refillDeck();
+            System.out.println("DECK EMPTY");
+            game.getTable().getPlayDeck().printDeck();
+        }
+        System.out.println("CURRENT POINTS VALUE: " + game.getCurrentPoints());
+
         int turnCount = 0;
+
         for (int i = 0; i < game.getMachinesAmount(); i++) {
             int index = i;
             if (!game.isMachineActive(index)) {
@@ -60,7 +72,18 @@ public class GameController {
 
                     Platform.runLater(() -> {
                         if (game.isMachineActive(index)) {
-                            machineTurn(index);
+                            if (!game.getTable().getDrawDeck().deckIsEmpty()){
+                                machineTurn(index);
+                                System.out.println("AFTER MACHINE " + index + " TURN");
+                                game.getTable().getPlayDeck().printDeck();
+                            }
+                            else{
+                                System.out.println("DECK IS EMPTY");
+
+                                game.getTable().getPlayDeck().printDeck();
+                                game.getTable().refillDeck();
+                            }
+                            System.out.println("CURRENT POINTS VALUE: " + game.getCurrentPoints());
                         } else {
                             System.out.println("Machine " + index + " is inactive.");
                         }
@@ -79,7 +102,6 @@ public class GameController {
                 }
             }).start();
         }
-
     }
 
     public boolean isLastMachine(int index) {
@@ -112,6 +134,7 @@ public class GameController {
         }
         updateCard(4, game.getCurrentCard().getValue(), game.getCurrentCard().getIcon());
         turnsLabel.setText(game.getPlayerName() + "'s turn");
+        game.setCurrentPoints(game.getCurrentCard().getCardValue());
         pointsLabel1.setText(String.valueOf(game.getCurrentPoints()));
     }
 
@@ -120,6 +143,7 @@ public class GameController {
         game.setCurrentCard();
         hidePlayerCard(cardIndex);
         System.out.println("Deck size: " + game.getDeckSize());
+        game.setCurrentPoints(game.getCurrentCard().getCardValue());
         game.updatePointsLabel(game.getCurrentPoints());
 
         updateCard(4, game.getCurrentCard().getValue(), game.getCurrentCard().getIcon());
@@ -142,6 +166,7 @@ public class GameController {
             hideMachineHand(index);
         } else {
             hideMachineCard(index, selectedCard);
+            game.setCurrentPoints(game.getCurrentCard().getCardValue());
             game.updatePointsLabel(game.getCurrentPoints());
 
             System.out.println("Deck size: " + game.getDeckSize());

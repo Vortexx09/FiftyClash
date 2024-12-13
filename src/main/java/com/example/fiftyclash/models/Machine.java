@@ -7,8 +7,8 @@ public class Machine extends Player {
     }
 
     @Override
-    public int selectPlayCard(Deck playDeck) {
-        int points = playDeck.getCurrentPoints();
+    public int selectPlayCard(int currentPoints) {
+        int points = currentPoints;
         int selectedCardIndex = -1;
         int closestTo50 = Integer.MAX_VALUE;
 

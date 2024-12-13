@@ -43,7 +43,7 @@ public abstract class Player {
         }
     }
 
-    public int selectPlayCard(Deck playDeck) {
+    public int selectPlayCard(int currentPoints) {
         return 0;
     }
 }
