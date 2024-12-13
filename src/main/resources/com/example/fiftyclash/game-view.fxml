@@ -195,7 +195,7 @@
             </ImageView>
          </children>
       </AnchorPane>
-      <Label fx:id="turnsLabel" layoutX="590.0" layoutY="585.0" prefHeight="53.0" prefWidth="260.0" text="'s Turn" textFill="WHITE">
+      <Label fx:id="turnsLabel" alignment="CENTER" layoutX="549.0" layoutY="580.0" prefHeight="53.0" prefWidth="363.0" text="'s Turn" textFill="WHITE">
          <font>
             <Font size="36.0" />
          </font>

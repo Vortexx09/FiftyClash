@@ -1,5 +1,7 @@
 package com.example.fiftyclash.controllers;
 
+import com.example.fiftyclash.controllers.observers.PointsObserver;
+import com.example.fiftyclash.controllers.observers.TurnObserver;
 import com.example.fiftyclash.models.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -52,21 +54,7 @@ public class GameController {
             new Thread(() -> {
                 try {
                     Thread.sleep(delay);
-                    Platform.runLater(() -> {
-                        if (game.isMachineActive(index)) {
-                            switch (index) {
-                                case 0:
-                                    turnsLabel.setText("Machine1's turn");
-                                    break;
-                                case 1:
-                                    turnsLabel.setText("Machine2's turn");
-                                    break;
-                                case 2:
-                                    turnsLabel.setText("Machine3's turn");
-                                    break;
-                            }
-                        }
-                    });
+                    Platform.runLater(() -> game.updateTurnLabel(index + 1));
 
                     Thread.sleep(500);
 
@@ -82,7 +70,7 @@ public class GameController {
 
                     Platform.runLater(() -> {
                         if (isLastMachine(index)) {
-                            turnsLabel.setText(game.getPlayerName() + "'s turn");
+                            game.updateTurnLabel(0);
                         }
                     });
 
@@ -110,6 +98,9 @@ public class GameController {
     public void initialize(String playerName, int machinesAmount){
         game = new GameModel(playerName, machinesAmount);
 
+        game.addObserver(new TurnObserver(turnsLabel));
+        game.addObserver(new PointsObserver(pointsLabel1));
+
         for (int i = 0; i < game.getMachinesAmount(); i++) {
             revealMachineHand(i);
         }
@@ -129,7 +120,7 @@ public class GameController {
         game.setCurrentCard();
         hidePlayerCard(cardIndex);
         System.out.println("Deck size: " + game.getDeckSize());
-        pointsLabel1.setText(String.valueOf(game.getCurrentPoints()));
+        game.updatePointsLabel(game.getCurrentPoints());
 
         updateCard(4, game.getCurrentCard().getValue(), game.getCurrentCard().getIcon());
         playButton.setDisable(false);
@@ -151,7 +142,7 @@ public class GameController {
             hideMachineHand(index);
         } else {
             hideMachineCard(index, selectedCard);
-            pointsLabel1.setText(String.valueOf(game.getCurrentPoints()));
+            game.updatePointsLabel(game.getCurrentPoints());
 
             System.out.println("Deck size: " + game.getDeckSize());
 

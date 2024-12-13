@@ -1,5 +1,7 @@
 package com.example.fiftyclash.models;
 
+import com.example.fiftyclash.controllers.observers.Observer;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +13,8 @@ public class GameModel {
     Player[] machines;
     Player humanPlayer;
     Table table;
+
+    private final List<Observer> observers = new ArrayList<>();
 
     public GameModel(String playerName, int machinesAmount) {
 
@@ -103,5 +107,35 @@ public class GameModel {
 
     public int getDeckSize() {
         return table.getDrawDeck().getSize();
+    }
+
+    public void addObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    public void notifyObservers(String message) {
+        for (Observer observer : observers) {
+            observer.update(message);
+        }
+    }
+
+    public void updateTurnLabel(int playerIndex) {
+        String message;
+
+        if (playerIndex == 0) {
+            message = playerName + "'s turn";
+        } else {
+            message = "Machine's " + playerIndex + " turn";
+        }
+
+        notifyObservers(message);
+    }
+
+    public void updatePointsLabel(int points) {
+        notifyObservers(String.valueOf(points));
     }
 }
