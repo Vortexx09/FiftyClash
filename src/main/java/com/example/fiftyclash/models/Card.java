@@ -25,12 +25,14 @@ public class Card {
 
     }
 
-    public int getCardValue() {
+    public int getCardValue(int points) {
+
         if (value == "J" || value == "Q" || value == "K") {
             return -10;
         }
         else if (value == "A"){
-            return 10;
+            if (points + 10 > 50) return 1;
+            else return 10;
         }
         else if (value == "9"){
             return 0;

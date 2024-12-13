@@ -80,6 +80,15 @@ public class GameModel {
         notifyObservers(message);
     }
 
+    public boolean checkCanPlay(int currentPoints, Player player) {
+        for (Card card : player.getHandCards()) {
+            if (card.getCardValue(currentPoints) + currentPoints <= 50) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Card[] getHumanCards() {
         return humanPlayer.getHandCards();
     }
@@ -144,5 +153,13 @@ public class GameModel {
 
     public Table getTable(){
         return table;
+    }
+
+    public Player getHumanPlayer(){
+        return humanPlayer;
+    }
+
+    public Player[] getMachinePlayer(){
+        return machines;
     }
 }
