@@ -76,23 +76,16 @@ public class GameController {
 
             selectedCard.setStyle("-fx-border-color: transparent; -fx-border-width: 1; " +
                     "-fx-border-radius: 5; -fx-background-radius: 5;");
-
-            System.out.println("AFTER PLAYER TURN");
-            game.getTable().getPlayDeck().printDeck();
         }
         else{
             game.getTable().refillDeck();
-            System.out.println("DECK EMPTY");
-            game.getTable().getPlayDeck().printDeck();
         }
-        System.out.println("CURRENT POINTS VALUE: " + game.getCurrentPoints());
 
         int turnCount = 0;
 
         for (int i = 0; i < game.getMachinesAmount(); i++) {
             int index = i;
             if (!game.isMachineActive(index)) {
-                System.out.println("Skipped machine " + (index + 1));
                 continue;
             }
             int delay = 1000 * (++turnCount);
@@ -107,17 +100,10 @@ public class GameController {
                         if (game.isMachineActive(index)) {
                             if (!game.getTable().getDrawDeck().deckIsEmpty()){
                                 machineTurn(index);
-                                System.out.println("AFTER MACHINE " + index + " TURN");
-                                game.getTable().getPlayDeck().printDeck();
                             }
                             else{
-                                System.out.println("DECK IS EMPTY");
-                                game.getTable().getPlayDeck().printDeck();
                                 game.getTable().refillDeck();
                             }
-                            System.out.println("CURRENT POINTS VALUE: " + game.getCurrentPoints());
-                        } else {
-                            System.out.println("Machine " + index + " is inactive.");
                         }
                     });
 
@@ -130,7 +116,6 @@ public class GameController {
 
                             boolean canContinue = game.checkCanPlay(game.getCurrentPoints(), game.getHumanPlayer());
                             if (!canContinue){
-                                System.out.println("PLAYER LOSES BECAUSE DOESN'T HAVE MORE CARDS TO PLAY");
                                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                                 alert.setTitle("Information");
                                 alert.setHeaderText(null);
@@ -188,7 +173,6 @@ public class GameController {
         game.playCard(cardIndex);
         game.setCurrentCard();
         hidePlayerCard(cardIndex);
-        System.out.println("Deck size: " + game.getDeckSize());
         game.setCurrentPoints(game.getCurrentCard().getCardValue(game.getCurrentPoints()));
         game.updatePointsLabel(game.getCurrentPoints());
 
@@ -214,7 +198,6 @@ public class GameController {
         if (selectedCard == -1) {
             hideMachineHand(index);
             if (game.getActiveMachineIndexes().size() == 0){
-                System.out.println("PLAYER WON");
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Information");
                 alert.setHeaderText(null);
@@ -229,8 +212,6 @@ public class GameController {
             hideMachineCard(index, selectedCard);
             game.setCurrentPoints(game.getCurrentCard().getCardValue(game.getCurrentPoints()));
             game.updatePointsLabel(game.getCurrentPoints());
-
-            System.out.println("Deck size: " + game.getDeckSize());
 
             updateCard(4, game.getCurrentCard().getValue(), game.getCurrentCard().getIcon());
             playButton.setDisable(true);
@@ -287,12 +268,6 @@ public class GameController {
             if (card != null){
                 card.setVisible(false);
             }
-            else {
-                System.out.println("NO CARD FOUND");
-            }
-        }
-        else{
-            System.out.println("NO MACHINE HAND FOUND");
         }
     }
 

@@ -9,14 +9,14 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1440.0" stylesheets="@styles/styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fiftyclash.controllers.GameController">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1440.0" stylesheets="@styles/styles.css" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fiftyclash.controllers.GameController">
    <children>
       <ImageView fitHeight="900.0" fitWidth="1440.0" pickOnBounds="true">
          <image>
             <Image url="@images/green-casino-poker-table-texture-game-background-free-vector.jpg" />
          </image>
       </ImageView>
-      <AnchorPane fx:id="card0" layoutX="460.0" layoutY="726.0" onMouseClicked="#getCardValues" prefHeight="160.0" prefWidth="115.0">
+      <AnchorPane fx:id="card0" layoutX="460.0" layoutY="726.0" onMouseClicked="#getCardValues" prefHeight="160.0" prefWidth="115.0" styleClass="humanCard">
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="160.0" stroke="WHITE" strokeType="INSIDE" width="115.0" />
             <Label fx:id="numberLabel0" prefHeight="40.0" prefWidth="115.0" text=" A">
@@ -36,7 +36,7 @@
             </Label>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="card1" layoutX="596.0" layoutY="726.0" onMouseClicked="#getCardValues" prefHeight="160.0" prefWidth="116.0">
+      <AnchorPane fx:id="card1" layoutX="596.0" layoutY="726.0" onMouseClicked="#getCardValues" prefHeight="160.0" prefWidth="116.0" styleClass="humanCard">
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="160.0" stroke="WHITE" strokeType="INSIDE" width="115.0" />
             <Label fx:id="numberLabel0" prefHeight="40.0" prefWidth="115.0" text=" A">
@@ -56,7 +56,7 @@
             </Label>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="card2" layoutX="728.0" layoutY="726.0" onMouseClicked="#getCardValues" prefHeight="160.0" prefWidth="116.0">
+      <AnchorPane fx:id="card2" layoutX="728.0" layoutY="726.0" onMouseClicked="#getCardValues" prefHeight="160.0" prefWidth="116.0" styleClass="humanCard">
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="160.0" stroke="WHITE" strokeType="INSIDE" width="115.0" />
             <Label fx:id="numberLabel0" layoutX="1.0" prefHeight="40.0" prefWidth="115.0" text=" A">
@@ -76,7 +76,7 @@
             </Label>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="card3" layoutX="864.0" layoutY="726.0" onMouseClicked="#getCardValues" prefHeight="160.0" prefWidth="116.0">
+      <AnchorPane fx:id="card3" layoutX="864.0" layoutY="726.0" onMouseClicked="#getCardValues" prefHeight="160.0" prefWidth="116.0" styleClass="humanCard">
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="160.0" stroke="WHITE" strokeType="INSIDE" width="115.0" />
             <Label fx:id="numberLabel0" prefHeight="48.0" prefWidth="115.0" text=" A">
@@ -194,21 +194,21 @@
             </ImageView>
          </children>
       </AnchorPane>
-      <Label fx:id="turnsLabel" alignment="CENTER" layoutX="456.0" layoutY="599.0" prefHeight="60.0" prefWidth="525.0" style="-fx-font-family: 'PokerKingsRegular'" text="'s Turn" textFill="WHITE">
+      <Label fx:id="turnsLabel" alignment="CENTER" layoutX="549.0" layoutY="580.0" prefHeight="53.0" prefWidth="363.0" text="'s Turn" textFill="WHITE">
          <font>
-            <Font size="36.0" />
+            <Font name="System Bold Italic" size="36.0" />
          </font>
       </Label>
       <HBox layoutX="644.0" layoutY="248.0" prefHeight="60.0" prefWidth="200.0">
          <children>
-            <Label fx:id="pointsLabel" style="-fx-font-family: PokerKingsRegular;" text="Points: " textFill="WHITE">
+            <Label id="points" fx:id="pointsLabel" text="Points: " textFill="WHITE">
                <font>
-                  <Font size="36.0" />
+                  <Font name="System Bold Italic" size="36.0" />
                </font>
             </Label>
             <Label fx:id="pointsLabel1" text="0" textFill="WHITE">
                <font>
-                  <Font size="36.0" />
+                  <Font name="System Bold Italic" size="36.0" />
                </font>
             </Label>
          </children>

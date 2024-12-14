@@ -22,14 +22,6 @@ public class Deck {
         Collections.shuffle(deck);
     }
 
-    public void printDeck () {
-        String icon = "";
-        for (int i = 0; i < deck.size(); ++i) {
-            icon = deck.get(i).getIcon();
-            System.out.println(deck.get(i).getValue() + icon);
-        }
-    }
-
     public boolean deckIsEmpty(){
         return deck.isEmpty();
     }
