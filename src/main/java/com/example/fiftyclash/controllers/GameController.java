@@ -19,23 +19,39 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.util.List;
-
+/**
+ * The GameController class handles the game logic, user interaction, and updates the UI components.
+ * It manages player turns, machine turns, and the interaction with the game model.
+ */
 public class GameController {
+
+    /** Root layout for the game UI. */
     @FXML
     private AnchorPane root;
+
+    /** Currently selected card by the player. */
     private AnchorPane selectedCard;
 
+    /** Labels for displaying points and turn information. */
     @FXML
     private Label pointsLabel1, turnsLabel;
 
+    /** Buttons for controlling the game actions. */
     @FXML
     private Button playButton, startButton;
 
+    /** Index of the selected card. */
     int cardIndex;
 
+    /** The game model managing game state and logic. */
     GameModel game;
 
-
+    /**
+     * Handles the card selection by the player.
+     * Highlights the selected card and enables the play button.
+     *
+     * @param event the MouseEvent triggered when a card is clicked.
+     */
     @FXML
     public void getCardValues(MouseEvent event) {
         AnchorPane clickedCard = (AnchorPane) event.getSource();
@@ -55,16 +71,20 @@ public class GameController {
         selectedCard = clickedCard;
     }
 
+    /**
+     * Manages the turns of the player and the machines.
+     * Updates the UI and handles game logic for turns.
+     *
+     * @param event the ActionEvent triggered when the play button is clicked.
+     */
     @FXML
     public void turnManagement(ActionEvent event) {
-
-        if (!game.getTable().getDrawDeck().deckIsEmpty()){
-            if (game.getCurrentPoints() + game.getHumanPlayer().getHandCards()[cardIndex].getCardValue(game.getCurrentPoints()) > 50){
-
+        if (!game.getTable().getDrawDeck().deckIsEmpty()) {
+            if (game.getCurrentPoints() + game.getHumanPlayer().getHandCards()[cardIndex].getCardValue(game.getCurrentPoints()) > 50) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Information");
                 alert.setHeaderText(null);
-                alert.setContentText(""" 
+                alert.setContentText("""
                                 Can't play this card!
                                 """);
                 alert.showAndWait();
@@ -76,8 +96,7 @@ public class GameController {
 
             selectedCard.setStyle("-fx-border-color: transparent; -fx-border-width: 1; " +
                     "-fx-border-radius: 5; -fx-background-radius: 5;");
-        }
-        else{
+        } else {
             game.getTable().refillDeck();
         }
 
@@ -98,10 +117,9 @@ public class GameController {
 
                     Platform.runLater(() -> {
                         if (game.isMachineActive(index)) {
-                            if (!game.getTable().getDrawDeck().deckIsEmpty()){
+                            if (!game.getTable().getDrawDeck().deckIsEmpty()) {
                                 machineTurn(index);
-                            }
-                            else{
+                            } else {
                                 game.getTable().refillDeck();
                             }
                         }
@@ -115,11 +133,11 @@ public class GameController {
                             playButton.setVisible(true);
 
                             boolean canContinue = game.checkCanPlay(game.getCurrentPoints(), game.getHumanPlayer());
-                            if (!canContinue){
+                            if (!canContinue) {
                                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                                 alert.setTitle("Information");
                                 alert.setHeaderText(null);
-                                alert.setContentText(""" 
+                                alert.setContentText("""
                                 You lost!
                                 """);
                                 alert.showAndWait();
@@ -135,6 +153,12 @@ public class GameController {
         }
     }
 
+    /**
+     * Checks if the specified machine is the last active machine.
+     *
+     * @param index the index of the machine to check.
+     * @return true if the specified machine is the last active machine, false otherwise.
+     */
     public boolean isLastMachine(int index) {
         for (int i = index; i < game.getMachinesAmount(); i++) {
             try {
@@ -148,7 +172,14 @@ public class GameController {
         return true;
     }
 
-    public void initialize(String playerName, int machinesAmount){
+    /**
+     * Initializes the game with the player's name and number of machines.
+     * Sets up the initial game state and updates the UI.
+     *
+     * @param playerName     the name of the player.
+     * @param machinesAmount the number of machines in the game.
+     */
+    public void initialize(String playerName, int machinesAmount) {
         game = new GameModel(playerName, machinesAmount);
 
         game.addObserver(new TurnObserver(turnsLabel));
@@ -160,7 +191,7 @@ public class GameController {
 
         Card[] humanCards = game.getHumanCards();
 
-        for (int i = 0; i < humanCards.length; i++){
+        for (int i = 0; i < humanCards.length; i++) {
             updateCard(i, humanCards[i].getValue(), humanCards[i].getIcon());
         }
         updateCard(4, game.getCurrentCard().getValue(), game.getCurrentCard().getIcon());
@@ -169,7 +200,10 @@ public class GameController {
         pointsLabel1.setText(String.valueOf(game.getCurrentPoints()));
     }
 
-    public void playerTurn(){
+    /**
+     * Executes the player's turn, updating the game state and UI.
+     */
+    public void playerTurn() {
         game.playCard(cardIndex);
         game.setCurrentCard();
         hidePlayerCard(cardIndex);
@@ -189,19 +223,22 @@ public class GameController {
 
         timeline.getKeyFrames().addAll(step1);
         timeline.play();
-
-
     }
 
-    public void machineTurn(int index){
+    /**
+     * Executes the turn for a machine, updating the game state and UI.
+     *
+     * @param index the index of the machine taking the turn.
+     */
+    public void machineTurn(int index) {
         int selectedCard = game.playMachine(index);
         if (selectedCard == -1) {
             hideMachineHand(index);
-            if (game.getActiveMachineIndexes().size() == 0){
+            if (game.getActiveMachineIndexes().size() == 0) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Information");
                 alert.setHeaderText(null);
-                alert.setContentText(""" 
+                alert.setContentText("""
                                 You won!
                                 """);
                 alert.showAndWait();
@@ -225,11 +262,16 @@ public class GameController {
             timeline.getKeyFrames().addAll(step1);
             timeline.play();
         }
-
-
     }
 
-    public void updateCard(int index, String number, String icon){
+    /**
+     * Updates the UI representation of a card with the given details.
+     *
+     * @param index the index of the card.
+     * @param number the card's number.
+     * @param icon the card's suit/icon.
+     */
+    public void updateCard(int index, String number, String icon) {
         AnchorPane card = (AnchorPane) root.lookup("#card" + index);
         if (card != null) {
             Label label1 = (Label) card.lookup("#numberLabel0");
@@ -247,50 +289,82 @@ public class GameController {
         }
     }
 
-    public void hidePlayerCard(int index){
+    /**
+     * Hides the player's card at the specified index.
+     *
+     * @param index the index of the card to hide.
+     */
+    public void hidePlayerCard(int index) {
         AnchorPane card = (AnchorPane) root.lookup("#card" + index);
         if (card != null) {
             card.setVisible(false);
         }
     }
 
-    public void showPlayerCard(int index){
+    /**
+     * Shows the player's card at the specified index.
+     *
+     * @param index the index of the card to show.
+     */
+    public void showPlayerCard(int index) {
         AnchorPane card = (AnchorPane) root.lookup("#card" + index);
         if (card != null) {
             card.setVisible(true);
         }
     }
 
-    public void hideMachineCard(int machineIndex, int cardIndex){
+    /**
+     * Hides a machine's card at the specified indexes.
+     *
+     * @param machineIndex the index of the machine.
+     * @param cardIndex    the index of the card to hide.
+     */
+    public void hideMachineCard(int machineIndex, int cardIndex) {
         AnchorPane machineHand = (AnchorPane) root.lookup("#machineHand" + machineIndex);
         if (machineHand != null) {
             ImageView card = (ImageView) machineHand.lookup("#machineCard" + cardIndex);
-            if (card != null){
+            if (card != null) {
                 card.setVisible(false);
             }
         }
     }
 
-    public void showMachineCard(int machineIndex, int cardIndex){
+    /**
+     * Shows a machine's card at the specified indexes.
+     *
+     * @param machineIndex the index of the machine.
+     * @param cardIndex    the index of the card to show.
+     */
+    public void showMachineCard(int machineIndex, int cardIndex) {
         AnchorPane machineHand = (AnchorPane) root.lookup("#machineHand" + machineIndex);
         if (machineHand != null) {
             ImageView card = (ImageView) machineHand.lookup("#machineCard" + cardIndex);
-            if (card != null){
+            if (card != null) {
                 card.setVisible(true);
             }
         }
     }
 
-    public void revealMachineHand(int machineIndex){
+    /**
+     * Reveals the entire hand of a machine.
+     *
+     * @param machineIndex the index of the machine whose hand will be revealed.
+     */
+    public void revealMachineHand(int machineIndex) {
         AnchorPane machineHand = (AnchorPane) root.lookup("#machineHand" + machineIndex);
-        if (machineHand != null){
+        if (machineHand != null) {
             machineHand.setVisible(true);
         }
     }
 
-    public void hideMachineHand(int machineIndex){
+    /**
+     * Hides the entire hand of a machine.
+     *
+     * @param machineIndex the index of the machine whose hand will be hidden.
+     */
+    public void hideMachineHand(int machineIndex) {
         AnchorPane machineHand = (AnchorPane) root.lookup("#machineHand" + machineIndex);
-        if (machineHand != null){
+        if (machineHand != null) {
             machineHand.setVisible(false);
         }
     }
