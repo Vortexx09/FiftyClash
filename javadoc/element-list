@@ -1,0 +1,8 @@
+module:com.example.fiftyclash
+com.example.fiftyclash
+com.example.fiftyclash.controllers
+com.example.fiftyclash.controllers.observers
+com.example.fiftyclash.models
+com.example.fiftyclash.models.cardAppearences
+com.example.fiftyclash.models.factory
+com.example.fiftyclash.views

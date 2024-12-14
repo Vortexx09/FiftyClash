@@ -23,7 +23,7 @@
             <Font size="36.0" />
          </font>
       </TextField>
-      <Label layoutX="488.0" layoutY="125.0" prefHeight="109.0" prefWidth="463.0" text="¡FIFTY CLASH!" textFill="WHITE">
+      <Label layoutX="503.0" layoutY="130.0" prefHeight="109.0" prefWidth="599.0" text="¡FIFTY CLASH!" textFill="WHITE">
          <font>
             <Font name="System Bold Italic" size="64.0" />
          </font>
@@ -60,5 +60,10 @@
             </RadioButton>
          </children>
       </HBox>
+      <Button layoutX="1339.0" layoutY="834.0" mnemonicParsing="false" onAction="#onActionButtonInstructions" text="?">
+         <font>
+            <Font name="System Bold Italic" size="18.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>
