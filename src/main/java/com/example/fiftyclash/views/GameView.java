@@ -13,7 +13,6 @@ public class GameView extends Stage {
     /**
      * Initializes the GameView by loading the FXML layout and setting
      * the window's title, scene, and other properties.
-     *
      * @throws IOException if there is an issue loading the FXML file
      */
     public GameView() throws IOException {

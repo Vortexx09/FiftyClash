@@ -23,19 +23,19 @@
             <Font size="36.0" />
          </font>
       </TextField>
-      <Label layoutX="523.0" layoutY="125.0" prefHeight="109.0" prefWidth="395.0" text="¡FIFTY CLASH!" textFill="WHITE">
+      <Label layoutX="488.0" layoutY="125.0" prefHeight="109.0" prefWidth="463.0" text="¡FIFTY CLASH!" textFill="WHITE">
          <font>
-            <Font size="64.0" />
+            <Font name="System Bold Italic" size="64.0" />
          </font>
       </Label>
       <Label layoutX="638.0" layoutY="519.0" text="Machines: " textFill="WHITE">
          <font>
-            <Font size="36.0" />
+            <Font name="System Bold Italic" size="38.0" />
          </font>
       </Label>
-      <Button fx:id="startButton" cancelButton="true" layoutX="678.0" layoutY="722.0" mnemonicParsing="false" onAction="#startGame" text="Start">
+      <Button fx:id="startButton" cancelButton="true" layoutX="671.0" layoutY="703.0" mnemonicParsing="false" onAction="#startGame" text="Start">
          <font>
-            <Font size="24.0" />
+            <Font name="System Bold Italic" size="28.0" />
          </font>
       </Button>
       <HBox layoutX="633.0" layoutY="572.0" prefHeight="45.0" prefWidth="180.0">

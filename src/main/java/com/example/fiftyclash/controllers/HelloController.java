@@ -26,7 +26,6 @@ public class HelloController {
     /**
      * Handles the Play button action.
      * Validates the username input and initializes the game view.
-     *
      * @param event the event triggered by clicking the Play button.
      * @throws IOException if there is an issue loading the game view.
      */
