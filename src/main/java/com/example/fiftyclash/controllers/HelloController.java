@@ -6,6 +6,7 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -56,7 +57,6 @@ public class HelloController {
             gameController.initialize(inputUsername.getText(), machinesAmount);
         }
     }
-
     /**
      * Displays game instructions in an informational alert dialog.
      * The instructions include details about the game objective, boards, and gameplay.
@@ -66,29 +66,27 @@ public class HelloController {
         alert.setTitle("Information");
         alert.setHeaderText(null);
         alert.setContentText(""" 
-                Welcome to Naval Battle instructions!
-                
-                Boards:
-                Position Board: This is the human player's board, showing the location of their own ships and marking any opponent's attacks. No shots can be made on this board.
-                Main Board: This is the human player's attack board. Here, they try to guess the location of the enemy’s ships on the computer’s board.
-                
-                Game Objective:
-                The goal is to sink all of the opponent's ships before they sink yours.
-                
-                How to Play:
-                Shooting: The player selects a square on the main board to shoot.
-                If they hit a square occupied by an enemy ship, it is marked as hit.
-                If the shot lands on an empty square, it is marked with an X indicating miss, and the turn passes to the computer.
-                If the shot sinks an entire ship (all of its parts hit, or it’s a one-square ship), the ship is fully marked as sunk.
-                
-                Game Terminology:
-                Miss: Indicates that the shot did not hit any ship.
-                Hit: The shot hit part of an enemy ship but did not sink it entirely.
-                Sunk: The shot has destroyed an entire ship. The player can continue shooting until they miss.
-                
-                The game ends when one player has sunk the entire fleet of the opponent.
-                Good luck, and enjoy the battle at sea!
-                """);
+            In "Fifty Clash", the goal is to be the last player remaining in the game. The game is played against 1, 2, or 3 AI players. Each player has 4 cards, and on their turn, they must select a card from their hand that modifies the sum on the table without exceeding 50.
+
+            Main Rules:
+            - The sum on the table must not exceed 50.
+            - On each turn, the player selects a card from their hand, which can either add or subtract from the table sum.
+            - Cards numbered 2 through 8 and 10 add their value to the sum.
+            - Cards numbered 9 have no effect on the sum.
+            - Cards J, Q, K subtract 10 from the sum.
+            - The Ace (A) can either add 1 or 10, depending on what benefits the player.
+
+            Setup:
+            - 4 cards are dealt to each player, and one card is placed face-up on the table to start the sum.
+            - The remaining cards are kept in the deck.
+
+            End of the Game:
+            - The game ends when only one player remains who has not been eliminated for exceeding 50 on the table.
+
+            Other Considerations:
+            - If the deck runs out of cards, the cards from the table (except the last played card) should be shuffled and returned to the deck.
+            - The cards from eliminated players are added to the end of the deck.
+            """);
         alert.showAndWait();
     }
 }

@@ -9,7 +9,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1440.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fiftyclash.controllers.GameController">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1440.0" stylesheets="@styles/styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fiftyclash.controllers.GameController">
    <children>
       <ImageView fitHeight="900.0" fitWidth="1440.0" pickOnBounds="true">
          <image>
@@ -121,8 +121,7 @@
             </Label>
          </children>
       </AnchorPane>
-      <Button fx:id="playButton" disable="true" layoutX="1048.0" layoutY="741.0" mnemonicParsing="false" onAction="#turnManagement" prefHeight="40.0" prefWidth="67.0" text="Play" />
-      <Button fx:id="startButton" layoutX="1048.0" layoutY="793.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="67.0" text="Start" />
+      <Button fx:id="playButton" disable="true" layoutX="1037.0" layoutY="780.0" mnemonicParsing="false" onAction="#turnManagement" prefHeight="53.0" prefWidth="75.0" text="Play" />
       <AnchorPane fx:id="machineHand0" prefHeight="200.0" prefWidth="1440.0" visible="false">
          <children>
             <ImageView fx:id="machineCard0" fitHeight="160.0" fitWidth="124.0" layoutX="460.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
@@ -195,14 +194,14 @@
             </ImageView>
          </children>
       </AnchorPane>
-      <Label fx:id="turnsLabel" alignment="CENTER" layoutX="549.0" layoutY="580.0" prefHeight="53.0" prefWidth="363.0" text="'s Turn" textFill="WHITE">
+      <Label fx:id="turnsLabel" alignment="CENTER" layoutX="549.0" layoutY="580.0" prefHeight="53.0" prefWidth="363.0" style="-fx-font-family: 'PokerKingsRegular'" text="'s Turn" textFill="WHITE">
          <font>
             <Font size="36.0" />
          </font>
       </Label>
       <HBox layoutX="644.0" layoutY="200.0" prefHeight="100.0" prefWidth="200.0">
          <children>
-            <Label fx:id="pointsLabel" text="Points: " textFill="WHITE">
+            <Label fx:id="pointsLabel" style="-fx-font-family: PokerKingsRegular;" text="Points: " textFill="WHITE">
                <font>
                   <Font size="36.0" />
                </font>
