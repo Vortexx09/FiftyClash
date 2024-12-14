@@ -74,6 +74,9 @@ public class GameController {
 
             playerTurn();
 
+            selectedCard.setStyle("-fx-border-color: transparent; -fx-border-width: 1; " +
+                    "-fx-border-radius: 5; -fx-background-radius: 5;");
+
             System.out.println("AFTER PLAYER TURN");
             game.getTable().getPlayDeck().printDeck();
         }
@@ -254,6 +257,12 @@ public class GameController {
             if (label1 != null) label1.setText(number);
             if (label2 != null) label2.setText(icon);
             if (label3 != null) label3.setText(number);
+
+            String color = (icon.equals("♥") || icon.equals("♦")) ? "red" : "black";
+
+            if (label1 != null) label1.setStyle("-fx-text-fill: " + color + ";");
+            if (label2 != null) label2.setStyle("-fx-text-fill: " + color + ";");
+            if (label3 != null) label3.setStyle("-fx-text-fill: " + color + ";");
         }
     }
 
