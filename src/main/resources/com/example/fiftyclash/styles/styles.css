@@ -1,0 +1,10 @@
+@font-face{
+    font-family: "PokerKingsRegular";
+    src: url("../fonts/PokerKingsRegular-36K8.ttf");
+}
+
+#pointsLabel{
+    -fx-font-family: "PokerKingsRegular";
+    -fx-font-size: 3em;
+    -fx-text-fill: #fff;
+}

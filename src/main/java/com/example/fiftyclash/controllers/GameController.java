@@ -8,19 +8,22 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.util.List;
 
 public class GameController {
     @FXML
-    private AnchorPane root, machineHand0, machineHand1, machineHand2;
+    private AnchorPane root;
+    private AnchorPane selectedCard;
 
     @FXML
     private Label pointsLabel1, turnsLabel;
@@ -32,6 +35,7 @@ public class GameController {
 
     GameModel game;
 
+
     @FXML
     public void getCardValues(MouseEvent event) {
         AnchorPane clickedCard = (AnchorPane) event.getSource();
@@ -39,6 +43,16 @@ public class GameController {
         playButton.setDisable(false);
 
         cardIndex = Integer.parseInt(cardId.replace("card", ""));
+
+        if (selectedCard != null) {
+            selectedCard.setStyle("-fx-border-color: transparent; -fx-border-width: 1; " +
+                    "-fx-border-radius: 5; -fx-background-radius: 5;");
+        }
+
+        clickedCard.setStyle("-fx-border-color: #00ff0d; -fx-border-width: 4; " +
+                "-fx-border-radius: 5; -fx-background-radius: 5;");
+
+        selectedCard = clickedCard;
     }
 
     @FXML
@@ -95,7 +109,6 @@ public class GameController {
                             }
                             else{
                                 System.out.println("DECK IS EMPTY");
-
                                 game.getTable().getPlayDeck().printDeck();
                                 game.getTable().refillDeck();
                             }
@@ -110,6 +123,7 @@ public class GameController {
                     Platform.runLater(() -> {
                         if (isLastMachine(index)) {
                             game.updateTurnLabel(0);
+                            playButton.setVisible(true);
 
                             boolean canContinue = game.checkCanPlay(game.getCurrentPoints(), game.getHumanPlayer());
                             if (!canContinue){
@@ -121,17 +135,16 @@ public class GameController {
                                 You lost!
                                 """);
                                 alert.showAndWait();
+                                Stage stage = (Stage) playButton.getScene().getWindow();
+                                stage.close();
                             }
                         }
                     });
-
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }).start();
         }
-
-
     }
 
     public boolean isLastMachine(int index) {
@@ -178,6 +191,7 @@ public class GameController {
 
         updateCard(4, game.getCurrentCard().getValue(), game.getCurrentCard().getIcon());
         playButton.setDisable(false);
+        playButton.setVisible(false);
 
         Timeline timeline = new Timeline();
 
@@ -197,7 +211,7 @@ public class GameController {
         if (selectedCard == -1) {
             hideMachineHand(index);
             if (game.getActiveMachineIndexes().size() == 0){
-                System.out.println("GANASTE GRAN PERRA");
+                System.out.println("PLAYER WON");
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Information");
                 alert.setHeaderText(null);
@@ -205,6 +219,8 @@ public class GameController {
                                 You won!
                                 """);
                 alert.showAndWait();
+                Stage stage = (Stage) playButton.getScene().getWindow();
+                stage.close();
             }
         } else {
             hideMachineCard(index, selectedCard);
