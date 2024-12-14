@@ -19,7 +19,6 @@ public class Table {
 
     public void initializeTable(Player player, Player[] machinesList) {
         drawDeck.initializeDeck();
-        drawDeck.printDeck();
 
         for (int i = 0; i < player.getHandCards().length; i++){
             humanPlayer.drawCard(drawDeck);
